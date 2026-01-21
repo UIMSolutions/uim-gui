@@ -1,0 +1,23 @@
+name "uim-gui:xfce"
+description "XFCE desktop environment bindings for D"
+authors "Ozan Nurettin Süel (UIManufaktur)"
+copyright "Copyright © 2018-2026, Ozan Nurettin Süel (UI Manufaktur)"
+license "Apache-2.0"
+
+targetType "library"
+targetPath "../lib"
+targetName "uim-xfce"
+
+dependency "uim-framework" version="~>26.1.2"
+
+configuration "library" {
+    targetType "library"
+    
+    // XFCE libraries
+    libs "xfconf-0" "xfce4util" "xfce4ui-2"
+    
+    // GTK dependencies (XFCE uses GTK)
+    libs "gtk-4" "glib-2.0" "gobject-2.0"
+    
+    lflags "-L/usr/lib/x86_64-linux-gnu"
+}

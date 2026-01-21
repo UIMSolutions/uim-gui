@@ -11,3 +11,4 @@ module uim.gui;
  */
 
 public import uim.gnome;
+public import uim.kde;

@@ -4,9 +4,10 @@ A comprehensive GUI library collection for the D programming language, built ove
 
 ## Overview
 
-UIM GUI provides high-quality, production-ready GUI bindings and frameworks for D applications. Currently includes:
+UIM GUI provides high-quality, production-ready GUI bindings and frameworks for D applications. Supporting both major Linux desktop environments:
 
 - **GNOME/GTK** - Complete bindings for GNOME libraries (GLib, GObject, GTK4, GDK, GIO)
+- **KDE/Qt** - Qt6 framework bindings for KDE Plasma applications
 
 ## Features
 
@@ -27,9 +28,24 @@ Complete bindings for GNOME/GTK development:
 - GDK - Drawing and windowing system
 - GIO - File and application I/O
 
+**Status:** ✅ Production-ready
+
 [See GNOME documentation](gnome/README.md)
 
+### KDE/Qt (`:kde`)
+
+Qt framework bindings for KDE Plasma development:
+- Qt Core - Core non-GUI functionality
+- Qt Widgets - Widget toolkit for desktop applications
+- Qt GUI - Graphics and windowing
+
+**Status:** ⚠️ Foundation/Architecture (requires C++ wrapper for production use)
+
+[See KDE documentation](kde/README.md)
+
 ## Installation
+
+### GNOME Library
 
 Add to your `dub.sdl`:
 
@@ -47,7 +63,27 @@ Or `dub.json`:
 }
 ```
 
+### KDE Library
+
+Add to your `dub.sdl`:
+
+```sdl
+dependency "uim-gui:kde" version="~>26.1.0"
+```
+
+Or `dub.json`:
+
+```json
+{
+    "dependencies": {
+        "uim-gui:kde": "~>26.1.0"
+    }
+}
+```
+
 ## Quick Start
+
+### GNOME Application
 
 ```d
 import uim.gnome;
@@ -76,23 +112,60 @@ void main(string[] args) {
 }
 ```
 
+### KDE/Qt Application
+
+```d
+import uim.kde;
+
+void main(string[] args) {
+    auto app = new Application(args);
+    
+    auto window = new MainWindow();
+    window.setWindowTitle("Hello KDE!");
+    window.resize(400, 300);
+    
+    auto button = new PushButton("Click Me!");
+    window.setCentralWidget(button);
+    
+    window.show();
+    app.exec();
+}
+```
+
+**Note:** KDE example requires a C++ wrapper library. See [KDE README](kde/README.md) for details.
+
 ## Requirements
 
 ### System Dependencies
 
-**Ubuntu/Debian:**
+**GNOME (Ubuntu/Debian):**
 ```bash
 sudo apt-get install libgtk-4-dev libglib2.0-dev
 ```
 
-**Fedora:**
+**GNOME (Fedora):**
 ```bash
 sudo dnf install gtk4-devel glib2-devel
 ```
 
-**Arch Linux:**
+**GNOME (Arch Linux):**
 ```bash
 sudo pacman -S gtk4 glib2
+```
+
+**KDE (Ubuntu/Debian):**
+```bash
+sudo apt-get install qt6-base-dev libqt6widgets6 libqt6core6
+```
+
+**KDE (Fedora):**
+```bash
+sudo dnf install qt6-qtbase-devel
+```
+
+**KDE (Arch Linux):**
+```bash
+sudo pacman -S qt6-base
 ```
 
 ### D Compiler
@@ -103,16 +176,34 @@ sudo pacman -S gtk4 glib2
 
 ## Examples
 
-See the `gnome/examples/` directory for complete examples:
+### GNOME Examples
+
+See the `gnome/examples/` directory:
 
 - `hello.d` - Simple hello world application
 - `formgrid.d` - Form with grid layout
 - `texteditor.d` - Basic text editor structure
 
+### KDE Examples
+
+See the `kde/examples/` directory:
+
+- `hello.d` - Simple Qt application
+- `form.d` - Registration form with layouts
+
 ## Building Examples
 
+**GNOME:**
 ```bash
 cd gnome/examples
+dub build --single hello.d
+./hello
+```
+
+**KDE:**
+```bash
+cd kde/examples
+# Note: Requires C++ wrapper library (see kde/README.md)
 dub build --single hello.d
 ./hello
 ```
@@ -120,20 +211,42 @@ dub build --single hello.d
 ## Documentation
 
 - [GNOME Module Documentation](gnome/README.md)
+- [KDE Module Documentation](kde/README.md)
 - [API Reference](https://docs.uim-framework.org/) (coming soon)
 
 ## Architecture
 
 The library is organized in layers:
 
+### GNOME Architecture
+
 1. **C Bindings** (`uim.gnome.c.*`) - Direct C API access
 2. **D Wrappers** (`uim.gnome.*`) - Idiomatic D interfaces
 3. **Utilities** (`uim.gnome.utils`) - Helper functions and RAII wrappers
 
+### KDE Architecture
+
+1. **C++ Bindings** (`uim.kde.c.*`) - Direct C++ API access (via extern(C++))
+2. **D Wrappers** (`uim.kde.*`) - Idiomatic D interfaces
+3. **Utilities** (`uim.kde.utils`) - Helper functions and type conversions
+
 This design allows you to:
 - Use high-level D wrappers for most tasks
-- Drop down to C bindings when needed for performance or features
+- Drop down to lower-level bindings when needed for performance or features
 - Extend the library easily with your own wrappers
+
+## Choosing Between GNOME and KDE
+
+| Feature | GNOME/GTK | KDE/Qt |
+|---------|-----------|--------|
+| **Status** | ✅ Production-ready | ⚠️ Requires C++ wrapper |
+| **ABI** | C (stable) | C++ (complex) |
+| **Integration** | Direct D binding | Requires intermediate layer |
+| **Desktop** | GNOME, Pantheon | KDE Plasma, LXQt |
+| **Style** | Modern, flat | Flexible theming |
+| **Use Case** | Ready for production | Architecture/testing only |
+
+**Recommendation:** Use GNOME bindings for production applications. KDE bindings are architectural foundations that require additional C++ wrapper development.
 
 ## Contributing
 
@@ -143,7 +256,9 @@ Contributions are welcome! Please:
 2. Add documentation for new features
 3. Include examples for significant features
 4. Write tests when applicable
-
+Qt Documentation](https://doc.qt.io/)
+- [KDE Developer](https://develop.kde.org/)
+- [
 ## License
 
 Apache 2.0 License
