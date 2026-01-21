@@ -1,0 +1,22 @@
+name "gnome"
+description "D bindings and wrappers for GNOME libraries (GLib, GObject, GTK, etc.)"
+homepage "https://www.sueel.de/uim/framework"
+authors "Ozan Nurettin Süel" "UI Manufaktur"
+copyright "Copyright © 2018-2026, Ozan Nurettin Süel"
+license "Apache-2.0"
+
+// Target
+targetType "library"
+targetPath "../lib"
+targetName "uim-gnome"
+
+// Dependencies
+dependency "uim-framework" version="~>26.1.2"
+
+// System libraries for GNOME
+libs "glib-2.0" "gobject-2.0" "gtk-4" platform="posix"
+lflags "-L/usr/lib/x86_64-linux-gnu" platform="linux"
+
+// Source files
+sourcePaths "source"
+importPaths "source"
