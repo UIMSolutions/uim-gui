@@ -12,3 +12,4 @@ module uim.gui;
 
 public import uim.gnome;
 public import uim.kde;
+public import uim.xfce;

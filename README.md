@@ -4,10 +4,11 @@ A comprehensive GUI library collection for the D programming language, built ove
 
 ## Overview
 
-UIM GUI provides high-quality, production-ready GUI bindings and frameworks for D applications. Supporting both major Linux desktop environments:
+UIM GUI provides high-quality, production-ready GUI bindings and frameworks for D applications. Supporting all major Linux desktop environments:
 
 - **GNOME/GTK** - Complete bindings for GNOME libraries (GLib, GObject, GTK4, GDK, GIO)
 - **KDE/Qt** - Qt6 framework bindings for KDE Plasma applications
+- **XFCE** - Complete bindings for XFCE desktop environment (xfconf, libxfce4util, libxfce4ui)
 
 ## Features
 
@@ -43,6 +44,18 @@ Qt framework bindings for KDE Plasma development:
 
 [See KDE documentation](kde/README.md)
 
+### XFCE (`:xfce`)
+
+XFCE desktop environment bindings:
+- xfconf - Configuration system
+- libxfce4util - Utility functions and resource management
+- libxfce4ui - UI helpers and XFCE-specific widgets
+- Session management support
+
+**Status:** ✅ Production-ready
+
+[See XFCE documentation](xfce/README.md)
+
 ## Installation
 
 ### GNOME Library
@@ -77,6 +90,24 @@ Or `dub.json`:
 {
     "dependencies": {
         "uim-gui:kde": "~>26.1.0"
+    }
+}
+```
+
+### XFCE Library
+
+Add to your `dub.sdl`:
+
+```sdl
+dependency "uim-gui:xfce" version="~>26.1.0"
+```
+
+Or `dub.json`:
+
+```json
+{
+    "dependencies": {
+        "uim-gui:xfce": "~>26.1.0"
     }
 }
 ```
@@ -134,6 +165,41 @@ void main(string[] args) {
 
 **Note:** KDE example requires a C++ wrapper library. See [KDE README](kde/README.md) for details.
 
+### XFCE Application
+
+```d
+import uim.xfce;
+
+void main(string[] args) {
+    initGTK();
+    initXfconf();
+    
+    auto app = new Application("org.example.app");
+    
+    app.connectSignal("activate", () {
+        auto window = new Window();
+        window.title = "Hello XFCE!";
+        window.setDefaultSize(400, 300);
+        
+        // Use xfconf for configuration
+        auto config = new Channel("myapp");
+        config.setString("/window/theme", "default");
+        
+        auto button = new Button("Click Me!");
+        button.onClicked(() {
+            showInfo(window, "Button Clicked!", 
+                    "This is an XFCE-style dialog.");
+        });
+        
+        window.setChild(button);
+        window.present();
+    });
+    
+    app.run(args);
+    shutdownXfconf();
+}
+```
+
 ## Requirements
 
 ### System Dependencies
@@ -168,6 +234,24 @@ sudo dnf install qt6-qtbase-devel
 sudo pacman -S qt6-base
 ```
 
+**XFCE (Ubuntu/Debian):**
+```bash
+sudo apt-get install libxfce4util-dev libxfce4ui-2-dev libxfconf-0-dev
+sudo apt-get install libgtk-4-dev libglib2.0-dev
+```
+
+**XFCE (Fedora):**
+```bash
+sudo dnf install xfce4-dev-tools libxfce4util-devel libxfce4ui-devel xfconf-devel
+sudo dnf install gtk4-devel glib2-devel
+```
+
+**XFCE (Arch Linux):**
+```bash
+sudo pacman -S xfce4-dev-tools libxfce4util libxfce4ui xfconf
+sudo pacman -S gtk4 glib2
+```
+
 ### D Compiler
 
 - DMD 2.100+ or
@@ -191,6 +275,14 @@ See the `kde/examples/` directory:
 - `hello.d` - Simple Qt application
 - `form.d` - Registration form with layouts
 
+### XFCE Examples
+
+See the `xfce/examples/` directory:
+
+- `hello.d` - XFCE application with dialogs and configuration
+- `settings.d` - Settings editor using xfconf
+- `resources.d` - Resource browser and utilities
+
 ## Building Examples
 
 **GNOME:**
@@ -208,10 +300,18 @@ dub build --single hello.d
 ./hello
 ```
 
+**XFCE:**
+```bash
+cd xfce/examples
+dub build --single hello.d
+./hello
+```
+
 ## Documentation
 
 - [GNOME Module Documentation](gnome/README.md)
 - [KDE Module Documentation](kde/README.md)
+- [XFCE Module Documentation](xfce/README.md)
 - [API Reference](https://docs.uim-framework.org/) (coming soon)
 
 ## Architecture

@@ -15,9 +15,11 @@ dependency "uim-framework" version="~>26.1.2"
 // uim dependencies
 dependency ":gnome" version="*"
 dependency ":kde" version="*"
+dependency ":xfce" version="*"
 
 sourceFiles "./source/uim/gui.d"
 
 // Subpackages
-subPackage "gnome"
-subPackage "kde"
+subPackage "./gnome/"
+subPackage "./kde/"
+subPackage "./xfce/"
